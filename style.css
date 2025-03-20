@@ -4,6 +4,7 @@ body {
     background-color: black;
 }
 
+/* Gaya efek hati */
 .love {
     position: absolute;
     width: 50px;
@@ -14,12 +15,22 @@ body {
     animation: floatUp 4s linear infinite, fadeOut 4s ease-in-out infinite;
 }
 
+/* Animasi hati naik ke atas */
 @keyframes floatUp {
-    0% { transform: translateY(0); }
-    100% { transform: translateY(-200px); }
+    0% {
+        transform: translateY(0) scale(1);
+    }
+    100% {
+        transform: translateY(-200px) scale(1.2);
+    }
 }
 
+/* Animasi hati memudar */
 @keyframes fadeOut {
-    0% { opacity: 1; }
-    100% { opacity: 0; }
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
 }
