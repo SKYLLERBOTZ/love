@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love Floating Effect - Spotify Style</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            background: linear-gradient(to bottom, #1DB954, #191414);
+            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+            color: white;
+            text-align: center;
+            position: relative;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+            width: 350px;
+        }
+
+        .photo {
+            width: 300px;
+            height: 300px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+            position: relative;
+        }
+
+        .photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .lyrics {
+            margin-top: 20px;
+            width: 90%;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            opacity: 1;
+        }
+
+        .progress-bar-container {
+            width: 80%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .progress-bar {
+            flex-grow: 1;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+            margin: 0 10px;
+            position: relative;
+        }
+
+        .progress {
+            height: 100%;
+            width: 0%;
+            background: #1DB954;
+            border-radius: 5px;
+        }
+
+        .time {
+            font-size: 14px;
+            color: white;
+        }
+
+        .controls {
+            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .controls button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .controls button i {
+            font-size: 30px;
+        }
+
+        /* Efek Floating Love */
+        .heart {
+            position: fixed;
+            bottom: 0;
+            width: 30px;
+            height: 30px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            animation: floatUp linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Modal -->
+<div id="popupModal" class="modal">
+    <div class="modal-content">
+        <p id="messageText"></p>
+        <button id="closeModal">Tutup</button>
+    </div>
+</div>
+
+<style>
+    /* Gaya Modal */
+    .modal {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 999;
+    }
+
+    .modal-content {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        width: 300px;
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+        color: black;
+    }
+
+    #closeModal {
+        background: #1DB954;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+
+    #closeModal:hover {
+        background: #14813b;
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const senderName = "Hikaaa"; // Nama pengirim
+        const message = `Halo fanii💐<br>Aku seneng bisa kenal kamu, i love everything you are.<br><br><strong>Dari: ${senderName}</strong>`;
+
+        document.getElementById("messageText").innerHTML = message;
+
+        const modal = document.getElementById("popupModal");
+        const closeModal = document.getElementById("closeModal");
+
+        closeModal.addEventListener("click", function() {
+            modal.style.display = "none"; // Tutup modal
+        });
+    });
+</script>
+
+    <div class="container">
+        <div class="photo">
+            <img src="fani.jpg" alt="Foto Romantis">
+        </div>
+        <div class="lyrics" id="lyrics">Here we are under the moonlight</div>
+        <div class="progress-bar-container">
+            <span class="time" id="current-time">0:00</span>
+            <div class="progress-bar"><div class="progress" id="progress"></div></div>
+            <span class="time" id="total-time">0:00</span>
+        </div>
+        <div class="controls">
+            <button id="prev"><i class="fas fa-step-backward"></i></button>
+            <button id="playPause"><i class="fas fa-play"></i></button>
+            <button id="next"><i class="fas fa-step-forward"></i></button>
+        </div>
+    </div>
+
+    <audio id="song" autoplay>
+        <source src="itsyou.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        const lyrics = [
+            "Here we are under the moonlight",
+            "I'm the one without a dry eye",
+            "'Cause you look amazing",
+            "I'm sorry for whatever I've caused",
+            "Before today I knew I felt lost",
+            "But now you're my lady",
+            "So take my hand now, see me",
+            "'Cause you've made me into this man",
+            "I promise I'll treasure you, girl",
+            "You're all that I've needed",
+            "Completing my world",
+            "You 🫵🫵🫵💐💐",
+            "You're my love, my life, my beginning",
+            "And I'm just so stoked I got you 🫵🫵🫵💐💐",
+            "Girl, you are the piece I've been missing",
+            "Remembering now",
+            "All the times I've been alone, showed me the way",
+            "Led me here, led me home",
+            "Right through that door straight to you 🫵🫵🫵💐💐",
+            "You're my love, my life, my beginning",
+            "It's you 🫵🫵💐💐",
+            "...."
+        ];
+
+        const timestamps = [0, 3, 5, 10, 13, 16, 20, 26, 31, 36, 39, 42, 44, 49, 54, 59, 63, 68, 71, 75, 80];
+        const lyricsElement = document.getElementById("lyrics");
+        const audio = document.getElementById("song");
+        const progressElement = document.getElementById("progress");
+        const currentTimeElement = document.getElementById("current-time");
+        const totalTimeElement = document.getElementById("total-time");
+        const playPauseButton = document.getElementById("playPause");
+
+        function updateLyrics() {
+            for (let i = 0; i < timestamps.length; i++) {
+                if (audio.currentTime >= timestamps[i] && (i === timestamps.length - 1 || audio.currentTime < timestamps[i + 1])) {
+                    lyricsElement.textContent = lyrics[i];
+                    break;
+                }
+            }
+        }
+
+        function updateProgress() {
+            if (!isNaN(audio.duration)) {
+                const percentage = (audio.currentTime / audio.duration) * 100;
+                progressElement.style.width = percentage + "%";
+                currentTimeElement.textContent = formatTime(audio.currentTime);
+                totalTimeElement.textContent = formatTime(audio.duration);
+            }
+        }
+
+        function formatTime(seconds) {
+            const min = Math.floor(seconds / 60);
+            const sec = Math.floor(seconds % 60);
+            return `${min}:${sec < 10 ? '0' + sec : sec}`;
+        }
+
+        playPauseButton.addEventListener("click", () => {
+            if (audio.paused) {
+                audio.play();
+                playPauseButton.innerHTML = '<i class="fas fa-pause"></i>';
+            } else {
+                audio.pause();
+                playPauseButton.innerHTML = '<i class="fas fa-play"></i>';
+            }
+        });
+
+        audio.addEventListener("timeupdate", () => {
+            updateLyrics();
+            updateProgress();
+        });
+
+        const heartImages = ['love1.png', 'love2.png', 'love3.png','love4.png','love5.png','love6.png', 'love7.png','love8.png','love9.png','love10.png',];
+
+        function createHeart() {
+    const heart = document.createElement("div");
+    heart.classList.add("heart");
+    
+    let size = Math.random() * (50 - 20) + 20; // Ukuran acak antara 20px dan 50px
+    heart.style.width = `${size}px`;
+    heart.style.height = `${size}px`;
+
+    heart.style.left = Math.random() * 100 + "vw"; // Posisi acak
+    heart.style.animationDuration = Math.random() * 3 + 3 + "s"; // Durasi animasi acak
+    heart.style.backgroundImage = `url('${heartImages[Math.floor(Math.random() * heartImages.length)]}')`;
+
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 5000); // Hapus setelah 5 detik
+}
+
+setInterval(createHeart, 400);
+
+    </script>
+</body>
+</html>
+
